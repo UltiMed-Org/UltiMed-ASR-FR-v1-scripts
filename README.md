@@ -163,7 +163,7 @@ The drug data in [`02_drugs/`](02_drugs/) **is** included, because it is French 
 
 - **All generated corpora and audio.** Hundreds of gigabytes, and derived from sources with licences this repository does not carry.
 - **`99_hf_release/scripts/upload_to_hf.py`.** Kept out of version control on purpose: it resolves paths through a local symlink to an external drive. The `.gitignore` entry explains how to bring it back.
-- **The fine-tuning config.** Training happens in a separate NeMo checkout, [UltiMed-ASR-FR-v1-NeMo_training_scripts](https://github.com/thiswillbeyourgithub/UltiMed-ASR-FR-v1-NeMo_training_scripts). `99_hf_release/scripts/parquet_to_nemo.py` rebuilds the NeMo training layout from the published Parquet, in either loose-manifest or tarred form, and that is the handoff point.
+- **The fine-tuning config.** Training happens in a separate NeMo checkout, [UltiMed-ASR-FR-v1-NeMo_training_scripts](https://github.com/UltiMed-Org/UltiMed-ASR-FR-v1-NeMo_training_scripts). `99_hf_release/scripts/parquet_to_nemo.py` rebuilds the NeMo training layout from the published Parquet, in either loose-manifest or tarred form, and that is the handoff point.
 - **Sample rows.** There is no `samples/` folder, because real rows would mean redistributing NonCommercial and ShareAlike source text under this repository's licence. Field names and semantics are documented in `CLAUDE.md` and in each script's docstring instead.
 
 ## Running the scripts
@@ -217,7 +217,7 @@ If you are adapting this pipeline, the transferable lesson is that word-acronyms
 
 The public drug database pads decimal parts inconsistently, so a single strength arrived spelled several ways for one form: `500 mg`, `500,0 mg` and `500,00 mg`. Those went into the LLM's presentation hint unchanged, where they read as three distinct doses of the same drug. Worse, 88 presentations carried a padded value with **no** clean twin at all, so `BENZYLTHIOURACILE` shipped `25,00 mg` and nothing else and was read aloud as "vingt-cinq virgule zéro zéro milligrammes".
 
-**Fixed** in [`90a6ed6`](https://github.com/thiswillbeyourgithub/UltiMed-ASR-FR-v1-scripts/commit/90a6ed612ac7ab33f82ad881f1ae3403f8004db8), *"canonicalize and de-duplicate BDPM dosage strings"*, which canonicalizes the padding away and then de-duplicates whatever becomes equal, in `02_drugs/sources/base_de_donnee_medicament/create_drug_db.py`. On the real 410-substance input that takes 1075 dosage entries down to 952 across 113 substances, with zero padded values left and no distinct dose lost. Covered by `tests/test_drug_dosage_dedup.py`.
+**Fixed** in [`90a6ed6`](https://github.com/UltiMed-Org/UltiMed-ASR-FR-v1-scripts/commit/90a6ed612ac7ab33f82ad881f1ae3403f8004db8), *"canonicalize and de-duplicate BDPM dosage strings"*, which canonicalizes the padding away and then de-duplicates whatever becomes equal, in `02_drugs/sources/base_de_donnee_medicament/create_drug_db.py`. On the real 410-substance input that takes 1075 dosage entries down to 952 across 113 substances, with zero padded values left and no distinct dose lost. Covered by `tests/test_drug_dosage_dedup.py`.
 
 The committed `02_drugs/*.jsonl` files are **deliberately not regenerated**: they are the exact inputs that built v1, and re-running them through the fixed script would desync this repository from the published dataset. The fix lands on the next build.
 
@@ -256,4 +256,4 @@ Full detail, in the form that ships with the dataset, is in [`99_hf_release/NOTI
 
 Built by Olivier Cornelis. The code, the prompts and the documentation in this repository were written with **[Claude Code](https://claude.com/claude-code)**, with some earlier passes in [aider](https://aider.chat/); the individual file docstrings note which where it matters.
 
-Repository: <https://github.com/thiswillbeyourgithub/UltiMed-ASR-FR-v1-scripts>
+Repository: <https://github.com/UltiMed-Org/UltiMed-ASR-FR-v1-scripts>
