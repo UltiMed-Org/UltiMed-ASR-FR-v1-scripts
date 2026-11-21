@@ -31,7 +31,6 @@ This repository is the **recipe, not the product**. It documents how a single pe
 ## Contents
 
 - [Disclaimer and scope](#disclaimer-and-scope)
-- [Related repositories](#related-repositories)
 - [The core idea](#the-core-idea)
 - [The pipeline](#the-pipeline)
 - [Architecture: one engine, five sources](#architecture-one-engine-five-sources)
@@ -56,29 +55,6 @@ This repository is the **recipe, not the product**. It documents how a single pe
 **No endorsement.** None of the organizations credited in [Third-party attribution](#third-party-attribution) endorse this code, the derived dataset, or any model trained on it. This is an explicit requirement of the Etalab 2.0 licence covering some of the sources.
 
 **No warranty.** This software is provided on an "AS IS" basis, without warranties or conditions of any kind, express or implied. See sections 7 and 8 of the [LICENSE](LICENSE).
-
-## Related repositories
-
-This repository is one piece of a French medical ASR stack; every other piece is public.
-
-| Repository | What it is |
-| --- | --- |
-| [Olicorne/UltiMed-ASR-FR-v1](https://huggingface.co/datasets/Olicorne/UltiMed-ASR-FR-v1) | The dataset. 601,264 clips / 3,104 h main corpus, plus a separate eval-only PARROT subset. Sharded Parquet with FLAC bytes embedded. Its card, NOTICE and scripts are the ones in [`99_hf_release/`](99_hf_release/). |
-| [Olicorne/parakeet-tdt-0.6b-v3-UltiMed-onnx](https://huggingface.co/Olicorne/parakeet-tdt-0.6b-v3-UltiMed-onnx) | The fine-tuned model: `parakeet-tdt-0.6b-v3` trained on the dataset above, exported to ONNX. |
-| [Olicorne/parakeet-tdt-0.6b-v3-optimized-onnx](https://huggingface.co/Olicorne/parakeet-tdt-0.6b-v3-optimized-onnx) | The multilingual baseline the fine-tune builds on: the upstream ONNX re-quantized for int8 accuracy on long audio and graph-optimized for browser speed. The fine-tune builds on it. |
-| **This repository** | The scripts that produced the dataset, stages 1 to 4 of the plan below. |
-| [UltiMed-ASR-FR-v1-NeMo_training_scripts](https://github.com/thiswillbeyourgithub/UltiMed-ASR-FR-v1-NeMo_training_scripts) | The NeMo fork and training scripts used for the fine-tune itself: step 5 of the plan below. |
-| [UltiMed-ASR-FR-v1-Voxtral](https://github.com/thiswillbeyourgithub/UltiMed-ASR-FR-v1-Voxtral) | The Voxtral TTS container that spoke every clip: Dockerfile, tuning, and the vllm-omni patches. |
-| [Parakeet Web](https://github.com/thiswillbeyourgithub/parakeet_web) | The in-browser ASR app that loads either ONNX model, live at [parakeetweb.olicorne.org](https://parakeetweb.olicorne.org/). Not part of this pipeline, but it is where the models end up. |
-
-The plan, end to end:
-
-1. Take text sources rich in domain vocabulary.
-2. Use LLM calls to turn those terms and documents into short, natural, dictation-style sentences (the written ASR transcript).
-3. Speak those sentences with a local TTS model to produce audio.
-4. Package and publish the resulting audio dataset.
-5. Fine-tune the ASR model on it. **This step is not in this repo**: it happens in a separate [NeMo](https://github.com/NVIDIA/NeMo) checkout with a standard NeMo training config, published as [UltiMed-ASR-FR-v1-NeMo_training_scripts](https://github.com/thiswillbeyourgithub/UltiMed-ASR-FR-v1-NeMo_training_scripts).
-6. Release the fine-tuned model.
 
 ## The core idea
 
